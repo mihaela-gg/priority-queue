@@ -55,6 +55,10 @@ public class SynchronizedPriorityQueue<E extends Comparable<? super E>> {
         return result.getLabel();
     }
 
+    public int size() {
+        return index;
+    }
+
     private synchronized void resize() {
         Element<E>[] newQueue = new Element[index + 1];
         System.arraycopy(queue, 0, newQueue, 0, index);
