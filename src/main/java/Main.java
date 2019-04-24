@@ -11,6 +11,7 @@ public class Main {
         System.out.println(priorityQueue.remove());
 
         priorityQueue.add("Emergency", 50);
+        priorityQueue.update("Paper cut", 70);
 
         System.out.println(priorityQueue.remove());
     }

@@ -5,25 +5,25 @@ package data;
  * @param <E> the type of the element
  */
 public class Element<E extends Comparable<? super E>> {
-    private E label;
+    private E content;
     private int priority;
 
     public Element() {
-        this.label = null;
+        this.content = null;
         this.priority = 0;
     }
 
-    public Element(E label, int priority) {
-        this.label = label;
+    public Element(E content, int priority) {
+        this.content = content;
         this.priority = priority;
     }
 
-    public E getLabel() {
-        return label;
+    public E getContent() {
+        return content;
     }
 
-    public void setLabel(E label) {
-        this.label = label;
+    public void setContent(E content) {
+        this.content = content;
     }
 
     public int getPriority() {
@@ -36,7 +36,7 @@ public class Element<E extends Comparable<? super E>> {
 
     @Override
     public String toString() {
-        return label + ", " + priority;
+        return content + ", " + priority;
     }
 }
 
