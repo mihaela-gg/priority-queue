@@ -48,8 +48,32 @@ public class SynchronizedPriorityQueueTest {
     }
 
     @Test
+    public void testAddRemoveWithSamePriority() {
+            SynchronizedPriorityQueue<String> priorityQueue = new SynchronizedPriorityQueue<>();
+            assert priorityQueue.size() == 0;
+
+            priorityQueue.add("broken leg", 10);
+            assert priorityQueue.size() == 1;
+
+            priorityQueue.add("paper cut", 5);
+            assert priorityQueue.size() == 2;
+
+            priorityQueue.add("knife cut", 10);
+            assert priorityQueue.size() == 3;
+
+            String firstElement = priorityQueue.remove();
+            assert priorityQueue.size() == 2;
+            assert firstElement.equals("broken leg");
+
+            String secondElement = priorityQueue.remove();
+            assert priorityQueue.size() == 1;
+            assert secondElement.equals("knife cut");
+    }
+
+    @Test
     public void testUpdatePriorityUp() {
         SynchronizedPriorityQueue<String> priorityQueue = new SynchronizedPriorityQueue<>();
+
         priorityQueue.add("broken leg", 10);
         priorityQueue.add("paper cut", 5);
         priorityQueue.add("gunshot wound", 20);
@@ -68,22 +92,27 @@ public class SynchronizedPriorityQueueTest {
     @Test
     public void testUpdatePriorityDown() {
         SynchronizedPriorityQueue<String> priorityQueue = new SynchronizedPriorityQueue<>();
+
         priorityQueue.add("broken leg", 10);
-        priorityQueue.add("paper cut", 5);
         priorityQueue.add("gunshot wound", 20);
         priorityQueue.add("emergency", 50);
 
-        assert priorityQueue.size() == 4;
+        assert priorityQueue.size() == 3;
 
         assert priorityQueue.update("emergency", 15);
-        assert priorityQueue.size() == 4;
-        String elemenet = priorityQueue.remove();
-        assert elemenet.equals("gunshot wound");
+        assert priorityQueue.size() == 3;
+
+        String firstElement = priorityQueue.remove();
+        assert firstElement.equals("gunshot wound");
+
+        String secondElement = priorityQueue.remove();
+        assert secondElement.equals("emergency");
     }
 
     @Test
     public void testUpdatePriorityBad() {
         SynchronizedPriorityQueue<String> priorityQueue = new SynchronizedPriorityQueue<>();
+
         priorityQueue.add("broken leg", 10);
         priorityQueue.add("paper cut", 5);
         priorityQueue.add("gunshot wound", 20);
@@ -92,5 +121,21 @@ public class SynchronizedPriorityQueueTest {
         assert priorityQueue.size() == 4;
 
         assert !priorityQueue.update("infection", 40);
+    }
+
+    @Test
+    public void testUpdatePriorityNoChange() {
+        SynchronizedPriorityQueue<String> priorityQueue = new SynchronizedPriorityQueue<>();
+
+        priorityQueue.add("broken leg", 10);
+        priorityQueue.add("paper cut", 5);
+        priorityQueue.add("gunshot wound", 20);
+
+        assert priorityQueue.size() == 3;
+
+        assert priorityQueue.update("paper cut", 7);
+
+        String element = priorityQueue.remove();
+        assert element.equals("gunshot wound");
     }
 }

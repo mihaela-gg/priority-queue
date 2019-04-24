@@ -3,7 +3,7 @@ import org.testng.annotations.Test;
 
 public class SynchronizedPriorityQueueMultithreadTest {
 
-    private volatile SynchronizedPriorityQueue<String> testPriorityQueue = new SynchronizedPriorityQueue<>();
+    private SynchronizedPriorityQueue<String> testPriorityQueue = new SynchronizedPriorityQueue<>();
 
     @Test(threadPoolSize = 3, invocationCount = 3, timeOut = 1000)
     public void testParallelAdd() {
@@ -31,6 +31,8 @@ public class SynchronizedPriorityQueueMultithreadTest {
 
         assert testPriorityQueue.size() == 1;
         System.out.println(testPriorityQueue.update("Wound", 10));
+
+        // there should be 1 element left in the queue and the update should work
         assert testPriorityQueue.update("Wound", 10);
     }
 }
