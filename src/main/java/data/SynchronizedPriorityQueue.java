@@ -3,7 +3,7 @@ package data;
 import java.util.LinkedList;
 
 public class SynchronizedPriorityQueue<E extends Comparable<? super E>> {
-    private volatile LinkedList<Element<E>> queue;
+    private LinkedList<Element<E>> queue;
 
     public SynchronizedPriorityQueue() {
         this.queue = new LinkedList<>();
