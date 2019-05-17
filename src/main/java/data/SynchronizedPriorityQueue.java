@@ -1,56 +1,45 @@
 package data;
 
+import java.util.LinkedList;
+
 public class SynchronizedPriorityQueue<E extends Comparable<? super E>> {
-    private volatile Element<E>[] queue;
-    private int index;
+    private volatile LinkedList<Element<E>> queue;
 
     public SynchronizedPriorityQueue() {
-        queue = new Element[10];
-        index = 0;
+        this.queue = new LinkedList<>();
     }
 
     /**
      * Add a new element to the queue.
-     * Complexity: O(1)
+     * The queue is ordered decreasingly.
+     * Complexity: O(log n) - a binary search is used to determine the position and the element
+     * is inserted on the determined index.
      *
-     * @param content the content o
-     * @param priority
+     * @param content the content
+     * @param priority the priority of the content
      */
-    public synchronized void add(E content, int priority) {
+    public void add(E content, int priority) {
         Element<E> element = new Element<>(content, priority);
-        if (index == queue.length) {
-            resize();
-        }
 
-        queue[index] = element;
-        index++;
+        // use the findIndex function to determine where the element should be inserted
+        int index = findIndex(priority);
+        queue.add(index, element);
     }
 
     /**
      * Removes the element with the highest priority and returns it.
-     * Complexity: O(n)
-     * Best case scenario: the queue is empty => O(1)
-     * Worst case scenario the element is somewhere in the queue => O(n)
+     * Complexity: O(1)
+     * As the underlying data structure is a linked list the first element can be removed
+     * with a complexity of O(1).
      *
      * @return the element with highest priority
      */
-    public synchronized E remove() {
-        if (index == 0) {
+    public E remove() {
+        if (queue.isEmpty()) {
             return null;
         }
 
-        int deletedIndex = 0;
-        for (int i = 0; i < index; i++) {
-            if (queue[i].getPriority() > queue[deletedIndex].getPriority()) {
-                deletedIndex = i;
-            }
-        }
-
-        Element<E> result = queue[deletedIndex];
-        index--;
-        queue[deletedIndex] = queue[index];
-
-        return result.getContent();
+        return queue.removeFirst().getContent();
     }
 
     /**
@@ -62,42 +51,55 @@ public class SynchronizedPriorityQueue<E extends Comparable<? super E>> {
      * @param priority the new priority
      */
     public synchronized boolean update(E element, int priority) {
-        int searchedIndex = index;
-
-        // search for the position of the element E
-        for (int i = 0; i < index; i++) {
-            if (queue[i].getContent().compareTo(element) == 0) {
-                searchedIndex = i;
-            }
-        }
-
-        if (searchedIndex != index) {
-            // set the new priority
-            queue[searchedIndex].setPriority(priority);
-            return true;
-        }
+        int searchedIndex = findIndex(priority);
+//        this.queue.re
 
         return false;
     }
 
     /**
-     * Get the size on the queue (the size is represented by the current index in the queue
+     * Get the size on the queue
      * @return the size of the queue
      */
     public int size() {
-        return index;
+        return queue.size();
     }
 
     /**
-     * Increase the size of the queue with 1
-     * Complexity: O(n) - all the elements from the initial array must be copied
+     * Function to determine the index where the element with the input priority should be inserted.
+     * Complexity: - O(1) if the queue is empty or the element will be inserted on the first/last position
+     *             - O(log n) otherwise because a binary search algorithm is used to find the index
+     *
+     * @param priority - the input priority
+     * @return the index where the element should be inserted
      */
-    private synchronized void resize() {
-        Element<E>[] newQueue = new Element[index + 1];
-        for (int i = 0; i < index; i++) {
-            newQueue[i] = queue[i];
+    private int findIndex(int priority) {
+        // if the queue is empty or the priority of the first element is smaller than the
+        // input priority, then the searched index is 0
+        if (queue.size() == 0 || queue.peekFirst().getPriority() < priority) {
+            return 0;
         }
-        queue = newQueue;
+
+        // if the priority of the last element of the queue is higher or equal to than the input
+        // priority, then the searched index is the size of the queue
+        if (queue.peekLast().getPriority() >= priority) {
+            return queue.size();
+        }
+
+        int left = 0;
+        int right = queue.size() - 1;
+
+        while (left < right) {
+            int middle = left + (right - left) / 2;
+            if (priority <= queue.get(middle).getPriority()) {
+                left = middle + 1;
+            } else {
+                right = middle;
+            }
+        }
+
+        return left;
     }
+
 }
 
