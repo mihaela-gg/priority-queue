@@ -79,7 +79,18 @@ public class SynchronizedPriorityQueueTest {
 
             String secondElement = priorityQueue.remove();
             assert priorityQueue.size() == 3;
-            assert secondElement.equals("broken leg");
+            assert secondElement.equals("gunshot wound");
+
+            String thirdElement = priorityQueue.remove();
+            assert priorityQueue.size() == 2;
+            assert thirdElement.equals("broken leg");
+
+            String fourthElement = priorityQueue.remove();
+            assert priorityQueue.size() == 1;
+            assert fourthElement.equals("knife cut");
+
+            priorityQueue.remove();
+            assert priorityQueue.size() == 0;
     }
 
     @Test
