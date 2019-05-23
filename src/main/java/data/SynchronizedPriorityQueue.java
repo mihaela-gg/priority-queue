@@ -21,10 +21,13 @@ public class SynchronizedPriorityQueue<E extends Comparable<? super E>> {
      */
     public void add(E content, int priority) {
         Element<E> element = new Element<>(content, priority);
-        queue.addElement(element);
 
-        int index = queue.size() - 1;
-        moveUp(index);
+        synchronized (this) {
+          queue.addElement(element);
+
+          int index = queue.size() - 1;
+          moveUp(index);
+        }
     }
 
     /**
@@ -39,12 +42,14 @@ public class SynchronizedPriorityQueue<E extends Comparable<? super E>> {
             return null;
         }
 
-        Element<E> removedElement = queue.firstElement();
-        queue.setElementAt(queue.lastElement(), 0);
-        queue.remove(size() - 1);
-        moveDown(0);
+        synchronized (this) {
+          Element<E> removedElement = queue.firstElement();
+          queue.setElementAt(queue.lastElement(), 0);
+          queue.remove(size() - 1);
+          moveDown(0);
 
-        return removedElement.getContent();
+          return removedElement.getContent();
+        }
     }
 
     /**
@@ -58,21 +63,23 @@ public class SynchronizedPriorityQueue<E extends Comparable<? super E>> {
      * @param content the searched element
      * @param priority the new priority
      */
-    public synchronized boolean update(E content, int priority) {
-        int index = -1;
-        for (int i = 0; i < size(); i++) {
+    public boolean update(E content, int priority) {
+        synchronized (this) {
+            int index = -1;
+            for (int i = 0; i < size(); i++) {
             if (queue.get(i).getContent().compareTo(content) == 0) {
-                index = i;
-                break;
+              index = i;
+              break;
             }
-        }
+          }
 
-        if (index >= 0) {
+          if (index >= 0) {
             queue.setElementAt(queue.lastElement(), index);
             queue.remove(size() - 1);
             moveDown(index);
             add(content, priority);
             return true;
+          }
         }
 
         return false;
