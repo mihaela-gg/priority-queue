@@ -48,14 +48,32 @@ public class SynchronizedPriorityQueue<E extends Comparable<? super E>> {
     }
 
     /**
-     * Update the priority of an element E
-     * Complexity: O(n)
-     *      - search in the array the element
+     * Update the priority of an content E with a new priority
+     * Complexity: O(n) - search in the array the element
+     *             O(log n) - moveDown
+     *             O(log n) - moveUp
+     *       => O(n) + 2 * O(log n)
+     *       => O(n) - final complexity
      *
-     * @param element the searched element
+     * @param content the searched element
      * @param priority the new priority
      */
-    public synchronized boolean update(E element, int priority) {
+    public synchronized boolean update(E content, int priority) {
+        int index = -1;
+        for (int i = 0; i < size(); i++) {
+            if (queue.get(i).getContent().compareTo(content) == 0) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index >= 0) {
+            queue.setElementAt(queue.lastElement(), index);
+            queue.remove(size() - 1);
+            moveDown(index);
+            add(content, priority);
+            return true;
+        }
 
         return false;
     }
@@ -68,7 +86,7 @@ public class SynchronizedPriorityQueue<E extends Comparable<? super E>> {
         return queue.size();
     }
 
-    // ---- HELPER FUNCTIONS ----
+    // ---- HELPER METHODS ----
 
     /**
      * @param index - the current index

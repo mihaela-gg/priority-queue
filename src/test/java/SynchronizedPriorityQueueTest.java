@@ -1,5 +1,4 @@
 import data.SynchronizedPriorityQueue;
-import org.junit.Ignore;
 import org.testng.annotations.Test;
 
 public class SynchronizedPriorityQueueTest {
@@ -94,7 +93,6 @@ public class SynchronizedPriorityQueueTest {
     }
 
     @Test
-    @Ignore
     public void testUpdatePriorityUp() {
         SynchronizedPriorityQueue<String> priorityQueue = new SynchronizedPriorityQueue<>();
 
@@ -114,7 +112,6 @@ public class SynchronizedPriorityQueueTest {
     }
 
     @Test
-    @Ignore
     public void testUpdatePriorityDown() {
         SynchronizedPriorityQueue<String> priorityQueue = new SynchronizedPriorityQueue<>();
 
@@ -135,7 +132,6 @@ public class SynchronizedPriorityQueueTest {
     }
 
     @Test
-    @Ignore
     public void testUpdatePriorityBad() {
         SynchronizedPriorityQueue<String> priorityQueue = new SynchronizedPriorityQueue<>();
 
@@ -150,7 +146,6 @@ public class SynchronizedPriorityQueueTest {
     }
 
     @Test
-    @Ignore
     public void testUpdatePriorityNoChange() {
         SynchronizedPriorityQueue<String> priorityQueue = new SynchronizedPriorityQueue<>();
 
